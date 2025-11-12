@@ -29,7 +29,7 @@ const Button: React.FC<
     <button
       {...props}
      
-      className={clsx(`rounded border w-24  capitalize`, {
+      className={clsx(`rounded border w-24 h-full  capitalize`, {
         "bg-blue-500 text-white": colorSchema === "blue" && variant === "solid",
         "border-blue-500 text-blue-500":
           colorSchema === "blue" && variant === "outline",
