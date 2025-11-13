@@ -7,8 +7,10 @@ import {
 } from "./interace";
 
 export const latihanService = {
-  list: async (params:FilterLatihan): Promise<ListLatihanResponse> => {
-    return await axiosClient.get("/latihan/list", {params}).then((n) => n.data);
+  list: async (params: FilterLatihan): Promise<ListLatihanResponse> => {
+    return await axiosClient
+      .get("/latihan/list", { params })
+      .then((n) => n.data);
   },
   create: async (payload: CreateLatihan): Promise<any> => {
     return await axiosClient
@@ -20,4 +22,7 @@ export const latihanService = {
   },
   detail: async (id: string): Promise<LatihanDetailResponse> =>
     axiosClient.get(`/latihan/detail/${id}`).then((res) => res.data),
+
+  delete: async (id: number) =>
+    axiosClient.delete(`/latihan/delete/${id}`).then((res) => res.data),
 };
