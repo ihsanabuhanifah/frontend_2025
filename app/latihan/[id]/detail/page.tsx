@@ -11,7 +11,7 @@ export default function LatihanDetailPage() {
   const { id } = useParams(); // menangkap parameter id dari URL
   const router = useRouter();
  
-  const [data, setData] = useState<Latihan | null>(null);
+  const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -24,7 +24,7 @@ export default function LatihanDetailPage() {
   
           console.log("Res", response)
   
-          setData(response.data);
+          setData(response);
         } catch (err: any) {
           console.error("Fetch error:", err);
           setError("Gagal memuat data latihan 😢");
@@ -42,8 +42,10 @@ export default function LatihanDetailPage() {
     }, [id]);
 
 
-    console.log("detail", data)
- 
+    console.log("detail =>", data)
+
+    console.log(data?.data.title)
+    
  
   if (loading) {
     return (

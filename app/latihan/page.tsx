@@ -49,16 +49,34 @@ export default function LatihanPage() {
     queryKey: ["latihan-list", {filterSubmit}],
     queryFn: () => latihanService.list(filterSubmit),
     retry: 1,
+    staleTime : 1000 * 60 * 60,  // waktu cache di anggap fresh sehingga tidak refrech
+    refetchInterval : 1000 * 60 * 60, // untuk refetch pada intervel tertentu
     select: (res) => res,
   });
 
   const mutate = useMutation({
     mutationFn: (id: number) => latihanService.delete(id),
-    onSuccess: () => {
-      queryClient.invalidateQueries({
-        queryKey: ["latihan-list"],
-         exact: false, // invalidasi semua yang punya prefix ini
+    onSuccess: async(res) => {
+
+      await queryClient.cancelQueries({ queryKey: ["latihan-list"] }); // untauk cancel jika ada fetch dari listihan-list
+
+      const previousData: any = queryClient.getQueryData(["latihan-list"]);
+
+     
+
+      const filtered = previousData.data.filter((item: {
+        id  : number
+      })=> item.id !== Number(res.message))
+      queryClient.setQueryData(["latihan-list"], () => {
+        return {
+          ...previousData,
+          data: [...filtered],
+        };
       });
+      // queryClient.invalidateQueries({
+      //   queryKey: ["latihan-list"],
+      //    exact: false, // invalidasi semua yang punya prefix ini
+      // });
 
       Swal.fire({
         title: "Good job!",
@@ -185,6 +203,7 @@ export default function LatihanPage() {
             <thead className="bg-gray-100">
               <tr>
                 <th className="px-4 py-2 text-left">#</th>
+                  <th className="px-4 py-2 text-left">Judul</th>
                 <th className="px-4 py-2 text-left">Nama</th>
                 <th className="px-4 py-2 text-left">Alamat</th>
                 <th className="px-4 py-2 text-left">Umur</th>
@@ -195,6 +214,7 @@ export default function LatihanPage() {
               {data?.data?.map((item: any, i: number) => (
                 <tr key={item.id} className="hover:bg-gray-50">
                   <td className="px-4 py-2">{i + 1}</td>
+                    <td className="px-4 py-2">{item.title}</td>
                   <td className="px-4 py-2">{item.name}</td>
                   <td className="px-4 py-2">{item.alamat}</td>
                   <td className="px-4 py-2">{item.umur}</td>
@@ -203,6 +223,11 @@ export default function LatihanPage() {
                       colorSchema="blue"
                       title="Detail"
                       onClick={() => router.push(`latihan/${item.id}/detail`)}
+                    />
+                      <Button
+                      colorSchema="green"
+                      title="Edit"
+                      onClick={() => router.push(`latihan/${item.id}/edit`)}
                     />
 
                     <Button

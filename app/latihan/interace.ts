@@ -30,10 +30,27 @@ export interface FilterLatihan {
   umur: string;
   page: number;
   limit: number;
-  keyword : string
+  keyword: string;
 }
 
 export interface CreateLatihan {
+  title: string;
+  name: string;
+  alamat: string;
+  umur: number | string;
+}
+
+export interface CreateLatihanBulk {
+  data: {
+    title: string;
+    name: string;
+    alamat: string;
+    umur: number | string;
+  }[];
+}
+
+export interface UpdateLatihan {
+  id: string | number;
   title: string;
   name: string;
   alamat: string;
